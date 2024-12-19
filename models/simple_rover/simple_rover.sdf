@@ -1,0 +1,544 @@
+<?xml version="1.0" ?>
+<sdf version="1.10">
+    <world name="car_world">
+        <physics name="1ms" type="ignored">
+            <max_step_size>0.001</max_step_size>
+            <real_time_factor>1.0</real_time_factor>
+        </physics>
+        <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+        <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+        <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+
+        <light type="directional" name="sun">
+            <cast_shadows>true</cast_shadows>
+            <pose>0 0 10 0 0 0</pose>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+            <attenuation>
+                <range>1000</range>
+                <constant>0.9</constant>
+                <linear>0.01</linear>
+                <quadratic>0.001</quadratic>
+            </attenuation>
+            <direction>-0.5 0.1 -0.9</direction>
+        </light>
+
+        <model name="ground_plane">
+            <static>true</static>
+            <link name="link">
+                <collision name="collision">
+                    <geometry>
+                        <plane>
+                            <normal>0 0 1</normal>
+                        </plane>
+                    </geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry>
+                        <plane>
+                            <normal>0 0 1</normal>
+                            <size>100 100</size>
+                        </plane>
+                    </geometry>
+                    <material>
+                        <ambient>0.8 0.8 0.8 1</ambient>
+                        <diffuse>0.8 0.8 0.8 1</diffuse>
+                        <specular>0.8 0.8 0.8 1</specular>
+                    </material>
+                </visual>
+            </link>
+        </model>
+
+        <model name="simple_rover" canonical_link="chassis">
+            <pose relative_to="world">0 0 0.35 0 0 0</pose>
+
+            <plugin
+                filename="libignition-gazebo-diff-drive-system"
+                name="ignition::gazebo::systems::DiffDrive">
+                <left_joint>wheel_front_left_joint</left_joint>
+                <right_joint>wheel_front_right_joint</right_joint>
+                <wheel_separation>0.36</wheel_separation>
+                <wheel_radius>0.175</wheel_radius>
+                <odom_publish_frequency>1</odom_publish_frequency>
+            </plugin>
+
+            <!-- Chassis -->
+            <link name="chassis">
+                <collision name="chassis_collision">
+                    <geometry>
+                        <box>
+                            <size>0.6 0.35 0.52</size>
+                        </box>
+                    </geometry>
+                </collision>
+                <visual name="chassis_visual">
+                    <geometry>
+                        <box>
+                            <size>0.6 0.35 0.52</size>
+                        </box>
+                    </geometry>
+                    <material>
+                        <ambient>0.2 0.2 0.2 1</ambient>
+                        <diffuse>0.2 0.2 0.2 1</diffuse>
+                        <specular>0.2 0.2 0.2 1</specular>
+                    </material>
+                </visual>
+                <inertial>
+                    <inertia>
+                        <ixx>0.1631</ixx>
+                        <iyy>0.2635</iyy>
+                        <izz>0.201</izz>
+                        <ixy>0.0</ixy>
+                        <ixz>0.0</ixz>
+                        <iyz>0.0</iyz>
+                    </inertia>
+                    <mass>5.0</mass>
+                </inertial>
+            </link>
+
+            <!-- Wheels -->
+            <link name="wheel_front_left">
+                <pose>0.25 0.18 -0.175 1.5707 0 0</pose>
+                <collision name="wheel_front_left_collision">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.175</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+                <visual name="wheel_front_left_visual">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.175</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>0.05 0.05 0.05 1</ambient>
+                        <diffuse>0.05 0.05 0.05 1</diffuse>
+                        <specular>0.05 0.05 0.05 1</specular>
+                    </material>
+                </visual>
+                <inertial>
+                    <mass>1</mass>
+                    <inertia>
+                        <ixx>0.043333</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.043333</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.08</izz>
+                    </inertia>
+                </inertial>
+            </link>
+
+            <link name="wheel_front_right">
+                <pose>0.25 -0.18 -0.175 1.5707 0 0</pose>
+                <collision name="wheel_front_right_collision">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.175</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+                <visual name="wheel_front_right_visual">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.175</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>0.05 0.05 0.05 1</ambient>
+                        <diffuse>0.05 0.05 0.05 1</diffuse>
+                        <specular>0.05 0.05 0.05 1</specular>
+                    </material>
+                </visual>
+                <inertial>
+                    <mass>1</mass>
+                    <inertia>
+                        <ixx>0.043333</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.043333</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.08</izz>
+                    </inertia>
+                </inertial>
+            </link>
+
+            <link name="wheel_back_left">
+                <pose>-0.25 0.18 -0.175 1.5707 0 0</pose>
+                <collision name="wheel_back_left_collision">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.175</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+                <visual name="wheel_back_left_visual">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.175</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>0.05 0.05 0.05 1</ambient>
+                        <diffuse>0.05 0.05 0.05 1</diffuse>
+                        <specular>0.05 0.05 0.05 1</specular>
+                    </material>
+                </visual>
+                <inertial>
+                    <mass>1</mass>
+                    <inertia>
+                        <ixx>0.043333</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.043333</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.08</izz>
+                    </inertia>
+                </inertial>
+            </link>
+
+            <link name="wheel_back_right">
+                <pose>-0.25 -0.18 -0.175 1.5707 0 0</pose>
+                <collision name="wheel_back_right_collision">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.175</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+                <visual name="wheel_back_right_visual">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.175</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>0.05 0.05 0.05 1</ambient>
+                        <diffuse>0.05 0.05 0.05 1</diffuse>
+                        <specular>0.05 0.05 0.05 1</specular>
+                    </material>
+                </visual>
+                <inertial>
+                    <mass>1</mass>
+                    <inertia>
+                        <ixx>0.043333</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.043333</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.08</izz>
+                    </inertia>
+                </inertial>
+            </link>
+
+            <!--Wheel to chassis joints-->
+            <joint name="wheel_front_left_joint" type="revolute">
+                <pose relative_to="wheel_front_left"/>
+                <parent>chassis</parent>
+                <child>wheel_front_left</child>
+                    <axis>
+                    <xyz expressed_in='__model__'>0 1 0</xyz> 
+                    <limit>
+                        <lower>-1.79769e+308</lower>    
+                        <upper>1.79769e+308</upper>     
+                    </limit>
+                </axis>
+                <dynamics> 
+                    <damping> 0.3 </damping>
+                    <friction> 0.3 </friction>
+                </dynamics>
+            </joint>
+
+            <joint name="wheel_front_right_joint" type="revolute">
+                <pose relative_to="wheel_front_right"/>
+                <parent>chassis</parent>
+                <child>wheel_front_right</child>
+                    <axis>
+                    <xyz expressed_in='__model__'>0 1 0</xyz> 
+                    <limit>
+                        <lower>-1.79769e+308</lower>    
+                        <upper>1.79769e+308</upper>     
+                    </limit>
+                </axis>
+                <dynamics> 
+                    <damping> 0.3 </damping>
+                    <friction> 0.3 </friction>
+                </dynamics>
+            </joint>
+
+            <joint name="wheel_back_left_joint" type="revolute">
+                <pose relative_to="wheel_back_left"/>
+                <parent>chassis</parent>
+                <child>wheel_back_left</child>
+                    <axis>
+                    <xyz expressed_in='__model__'>0 1 0</xyz> 
+                    <limit>
+                        <lower>-1.79769e+308</lower>    
+                        <upper>1.79769e+308</upper>     
+                    </limit>
+                </axis>
+                <dynamics> 
+                    <damping> 0.3 </damping>
+                    <friction> 0.3 </friction>
+                </dynamics>
+            </joint>
+
+            <joint name="wheel_back_right_joint" type="revolute">
+                <pose relative_to="wheel_back_right"/>
+                <parent>chassis</parent>
+                <child>wheel_back_right</child>
+                    <axis>
+                    <xyz expressed_in='__model__'>0 1 0</xyz> 
+                    <limit>
+                        <lower>-1.79769e+308</lower>    
+                        <upper>1.79769e+308</upper>     
+                    </limit>
+                </axis>
+                <dynamics> 
+                    <damping> 0.3 </damping>
+                    <friction> 0.3 </friction>
+                </dynamics>
+            </joint>
+
+            <!-- Robotic Arm -->
+            <link name="arm_base_rotor">
+                <pose>0.2 0.055 0.285 0 0 0</pose>
+                <collision name="arm_base_rotor_collision">
+                    <geometry>
+                        <box>
+                            <size>0.1 0.05 0.05</size>
+                        </box>
+                    </geometry>
+                </collision>
+                <visual name="arm_base_rotor_visual">
+                    <geometry>
+                        <box>
+                            <size>0.1 0.05 0.05</size>
+                        </box>
+                    </geometry>
+                    <material>
+                        <ambient>0.8 0.8 0.8 1</ambient>
+                        <diffuse>0.8 0.8 0.8 1</diffuse>
+                        <specular>0.8 0.8 0.8 1</specular>
+                    </material>
+                </visual>
+                <inertial>
+                    <inertia>
+                        <ixx>0.0020833</ixx>
+                        <iyy>0.0010417</iyy>
+                        <izz>0.0010417</izz>
+                        <ixy>0.0</ixy>
+                        <ixz>0.0</ixz>
+                        <iyz>0.0</iyz>
+                    </inertia>
+                    <mass> 0.2 </mass>
+                </inertial>
+            </link>
+
+            <joint name="fixed_joint" type="fixed">
+                <pose relative_to="arm_base_rotor"/>
+                <parent>chassis</parent>
+                <child>arm_base_rotor</child>
+            </joint>
+
+            <link name="arm_base">
+                <pose>0.2 0 0.435 0 0 0</pose>
+                <collision name="rod1_collision">
+                    <pose> 0 0 0 0 0 0 </pose>
+                    <geometry>
+                        <cylinder>
+                            <radius>0.03</radius>
+                            <length>0.35</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+                <collision name="rod2_collision">
+                    <pose> 0.17 0 0.145 0 1.5707 0 </pose>
+                    <geometry>
+                        <cylinder>
+                            <radius>0.03</radius>
+                            <length>0.4</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+
+
+
+                <visual name="rod1_visual">
+                    <pose> 0 0 0 0 0 0 </pose>
+                    <geometry>
+                        <cylinder>
+                            <radius>0.03</radius>
+                            <length>0.35</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>0 0.85 0 1</ambient>
+                        <diffuse>0 0.85 0 1</diffuse>
+                        <specular>0 0.85 0 1</specular>
+                    </material>
+                </visual>
+                <visual name="rod2_visual">
+                    <pose> 0.17 0 0.145 0 1.5707 0 </pose>                    
+                    <geometry>
+                        <cylinder>
+                            <radius>0.03</radius>
+                            <length>0.4</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>0 0.9 0 1</ambient>
+                        <diffuse>0 0.9 0 1</diffuse>
+                        <specular>0 0.9 0 1</specular>
+                    </material>
+                </visual>
+
+                <inertial>
+                    <mass> 3.0 </mass>
+                    <inertia>
+                        <ixx>0.01162</ixx>
+                        <iyy>0.01162</iyy>
+                        <izz>0.00307</izz>
+                        <ixy>0.0</ixy>
+                        <ixz>0.0</ixz>
+                        <iyz>0.0</iyz>
+                    </inertia>
+                </inertial>
+            </link>
+
+            <joint name="joint_a" type="revolute">
+                <pose relative_to="arm_base_rotor"/>
+                <parent>arm_base_rotor</parent>
+                <child>arm_base</child>
+                <axis>
+                    <xyz>0 1 0</xyz> 
+                    <limit>
+                        <lower>-1</lower>    
+                        <upper>1.5707</upper>     
+                    </limit>
+                </axis>
+                <dynamics> 
+                    <damping> 0.1 </damping>
+                    <friction> 0.1 </friction>
+                </dynamics>
+            </joint>
+
+            <link name="forearm">
+                <pose relative_to="arm_base"> 0.34 -0.06 0.0325 0 0 0</pose>
+                <collision name="forearm_collision">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.03</radius>
+                            <length>0.285</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+                <visual name="forearm_visual">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.03</radius>
+                            <length>0.285</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>0 0.95 0 1</ambient>
+                        <diffuse>0 0.95 0 1</diffuse>
+                        <specular>0 0.95 0 1</specular>
+                    </material>
+                </visual>
+                <inertial>
+                    <mass>0.5</mass>
+                    <inertia>
+                        <ixx>0.0034</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.0034</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.0006</izz>
+                    </inertia>
+                </inertial>
+            </link>
+
+            <joint name="joint_b" type="prismatic">
+                <parent>arm_base</parent>
+                <child>forearm</child>
+                <pose> 0.34 0 0.145 0 0 0 </pose>
+                <axis>
+                    <xyz>0 0 1</xyz> 
+                    <limit>
+                        <lower>0</lower>    
+                        <upper>0.27</upper>     
+                    </limit>
+                </axis>
+                <dynamics> 
+                    <damping> 0.01 </damping>
+                    <friction> 0.01 </friction>
+                </dynamics>
+            </joint>
+
+            <link name="gripper">
+                <pose relative_to="forearm"> 0 0 -0.1675 0 1.5707 0</pose>
+                <collision name="gripper_collision">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.025</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                </collision>
+                <visual name="gripper_visual">
+                    <geometry>
+                        <cylinder>
+                            <radius>0.025</radius>
+                            <length>0.1</length>
+                        </cylinder>
+                    </geometry>
+                    <material>
+                        <ambient>0 1 0 1</ambient>
+                        <diffuse>0 1 0 1</diffuse>
+                        <specular>0 1 0 1</specular>
+                    </material>
+                </visual>
+                <inertial>
+                    <mass> 0.1 </mass>
+                    <inertia>
+                        <ixx>0.00049375</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.00049375</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.00015625</izz>
+                    </inertia>
+                </inertial>
+            </link>
+
+            <joint name="joint_c" type="revolute">
+                <pose relative_to="gripper"/>
+                <parent>forearm</parent>
+                <child>gripper</child>
+                <axis>
+                    <xyz>0 0 1</xyz> 
+                    <limit>
+                        <lower>-1.79769e+308</lower>    
+                        <upper>1.79769e+308</upper>     
+                    </limit>
+                </axis>
+                <dynamics> 
+                    <damping> 0.01 </damping>
+                    <friction> 0.01 </friction>
+                </dynamics>
+            </joint>
+
+        </model>
+    </world>
+</sdf>
